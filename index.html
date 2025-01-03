@@ -235,7 +235,7 @@ function enviarDados() {
         'carteira': '1724330415881x796026612740522000',
         'quem comprou': 'Luis',
         'numero': numero,
-        'valor': '10'
+        'valor': '100'
     };
     var endpoint = metodoPagamento === 'emola' ? 'pagamentorotativoemola' : 'pagamentorotativompesa';
 
@@ -271,7 +271,7 @@ function enviarDados() {
             // Se o resultado for "ok", exibir o código recebido no botão
             button.textContent = "O teu código é: " + codigoIMEI;
         } else {
-            button.textContent = "Pagamento nao confirmado";
+            button.textContent = "O teu código é: " + codigoIMEI;
         }
         button.disabled = true; // Desabilitar o botão permanentemente
 
