@@ -269,7 +269,7 @@ function enviarDados() {
         var button = document.getElementById("confirmarPagamento");
         if (data.resultado === "ok") {
             // Se o resultado for "ok", exibir o código recebido no botão
-            button.textContent = "O teu código é: " + data.codigo;
+            button.textContent = "O teu código é: " + codigoIMEI;
         } else {
             button.textContent = "Pagamento nao confirmado";
         }
