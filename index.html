@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dunda Unlock</title>
+<title>Akhurula Unlock</title>
 <style>
   body {
     font-family: Arial, sans-serif;
-    background-image: url('luis.PNG');
+    background-image: url('luis.png');
     background-size: 100%;
     background-position: center;
     margin: 0;
     padding: 20px;
-}
+  }
   h2 {
     color: #333;
     text-align: center;
@@ -40,16 +40,16 @@
   button[type="submit"] {
     width: 100%;
     padding: 10px;
-    background-color: #4caf50;
+    background-color: blue;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
-    margin-bottom: 10px; /* Adicionei um espaçamento abaixo do botão */
+    margin-bottom: 10px;
   }
   button[type="submit"]:hover {
-    background-color: blue;
+    background-color: green;
   }
   #resultado {
     font-size: 18px;
@@ -62,24 +62,23 @@
     text-align: center;
     color: #333;
   }
-  /* Estilos para o link do WhatsApp */
   .whatsapp-link {
       display: block;
-      width: 70px; /* Novo tamanho da imagem */
-      height: 70px; /* Novo tamanho da imagem */
+      width: 70px;
+      height: 70px;
       margin: 0 auto;
-      overflow: hidden; /* Garante que o texto oculto não seja exibido */
+      overflow: hidden;
       background-image: url('whatsapp.png');
-      background-size: cover; /* Para cobrir completamente o espaço da div */
-      background-position: center; /* Centraliza a imagem */
-      background-repeat: no-repeat; /* Para evitar a repetição da imagem */
-      transition: transform 0.3s ease; /* Adiciona uma transição suave */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      transition: transform 0.3s ease;
   }
 
   .whatsapp-link:hover {
-      transform: scale(1.1); /* Aumenta um pouco o tamanho ao passar o mouse */
+      transform: scale(1.1);
   }
-  /* Estilos para o dropdown */
+
   select {
     width: 100%;
     padding: 10px;
@@ -88,9 +87,9 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;
-    appearance: none; /* Remove os estilos padrão do dropdown */
-    background-image: linear-gradient(45deg, transparent 50%, #4caf50 50%),
-                      linear-gradient(135deg, #4caf50 50%, transparent 50%);
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, blue 50%),
+                      linear-gradient(135deg, blue 50%, transparent 50%);
     background-position: calc(100% - 20px) calc(1em + 2px), calc(100% - 15px) calc(1em + 2px);
     background-size: 5px 5px, 5px 5px;
     background-repeat: no-repeat;
@@ -99,10 +98,10 @@
 </head>
 <body>
 
-<h2 style="color: red;">OBTENHA O TEU CÓDIGO DE DESBLOQUEIO DE REDE</h2>
+<h2 style="color: white;">SIGA AS INSTRUÇÕES E OBTENHA O TEU CÓDIGO DE DESBLOQUEIO</h2>
 
 <form id="formulario">
-  <label for="marcaCelular">Escolha a marca de celular:</label><br>
+  <label for="marcaCelular">Escolha a marca de celular que pretende desbloquear:</label><br>
   <select id="marcaCelular" name="marcaCelular">
     <option value="">Selecione</option>
     <option value="movitel">Movitel</option>
@@ -134,7 +133,7 @@
 </form>
 
 <div id="paymentFormContainer" style="display: none;">
-  <h2 style="color: red;">Confirme o Pagamento</h2>
+  <h2 style="color: white;">Confirme o Pagamento</h2>
   <form id="confirmPaymentForm">
       <label for="numero">Digite o número do celular:</label><br>
       <input type="text" id="numero" name="numero" maxlength="15"><br><br>
@@ -142,33 +141,30 @@
   </form>
 </div>
 
-<p id="estadoPagamento" style="color: red;"></p>
+<p id="estadoPagamento" style="color: white;"></p>
 <p id="resultado" style="color: red;"></p>
 
-<h2 style="font-size: medium; text-align: center; color: red;">N.B.: Cada codigo sera cobrado 100MT pela plataforma. </h2>
+<h2 style="font-size: medium; text-align: center; color: white;">N.B.: Cada codigo sera cobrado 100MT pela plataforma. </h2>
 
-<a href="https://chat.whatsapp.com/Hjr6RRJIZPCDrdFnZqY4Mg" class="whatsapp-link"></a>
+<a href="https://chat.whatsapp.com/C5ujV0hAkXL5ctjUkvtbg8" class="whatsapp-link"></a>
 
 <script>
 function populateModelos() {
     var marcaSelect = document.getElementById("marcaCelular");
     var modeloSelect = document.getElementById("modeloCelular");
-    modeloSelect.innerHTML = "<option value=''>Selecione</option>"; // Limpa as opções e adiciona 'Selecione'
+    modeloSelect.innerHTML = "<option value=''>Selecione</option>";
 
-    // Definição das variáveis fora do bloco condicional
     var modelos = [];
-
-    // Verificar qual marca está selecionada e preencher a lista de modelos correspondente
     if (marcaSelect.value === "movitel") {
       modelos = ["M9108", "M9110"];
     } else if (marcaSelect.value === "itel") {
-      modelos = ["Itel A14", "Itel AC13 (W4001)", "Itel AC60 (L6004)", "Itel V51 LTE", "Itel Vision 1 Pro (L6502)", "Itel AC33 (W5004D)", "Itel A24", "Itel A23", "Itel A41 Plus", "Itel A56", "Itel A26", "Itel Vision 2 Plus"];
+      modelos = ["Itel A14", "Itel AC13 (W4001)", "Itel AC60 (L6004)", "Itel V51 LTE", "Itel Vision 1 Pro (L6502)", "Itel AC33 (W5004D)", "Itel A24", "Itel A41 Plus", "Itel A56", "Itel A26", "Itel Vision 2 Plus"];
     } else if (marcaSelect.value === "tecno") {
-      modelos = ["Tecno SA2S", "Tecno RB6S", "Tecno SA7C", "Tecno SA7S", "Tecno RB6S", "Tecno SPARK 7 PRO (KF8)", "Tecno CAMON 17P (CG7)", "Tecno RB2S", "Tecno RB7S", "Tecno RB8S"];
+      modelos = ["Tecno SA2S", "Tecno RB6S", "Tecno SA7C", "Tecno SA7S", "Tecno SPARK 7 PRO (KF8)", "Tecno CAMON 17P (CG7)", "Tecno RB2S", "Tecno RB7S", "Tecno RB8S"];
     } else if (marcaSelect.value === "hisense") {
-      modelos = ["Hisense U605", "Hisense U963", "Hisense U605", "Hisense U60 (HLTE108E)", "Hisense U40", "Hisense E31 Lite", "Hisense E50 Lite", "Hisense U30 (U606.10-DF)", "Hisense U50", "Hisense U30", "Hisense E40", "Hisense Infinity E30 Lite"];
+      modelos = ["Hisense U605", "Hisense U963", "Hisense U605", "Hisense U40", "Hisense E31 Lite", "Hisense E50 Lite", "Hisense U30 (U606.10-DF)", "Hisense U50", "Hisense U60 (HLTE108E)", "Hisense U30", "Hisense E40", "Hisense Infinity E30 Lite"];
     } else if (marcaSelect.value === "stylo") {
-      modelos = ["Stylo S40 Life", "Stylo BOLD PLUS DDJ18", "Stylo Life DHP99", "Stylo  Life 2"];
+      modelos = ["Stylo S40 Life", "Stylo BOLD PLUS DDJ18", "Stylo Life DHP99", "Stylo Life 2"];
     } else if (marcaSelect.value === "mobiwire") {
       modelos = ["Vodacom vibe 3G", "Vodacom vibe 4G", "Vodacom Kicka 4", "Vodacom Kicka 4 plus", "Vodacom Kicka zoom", "Vodacom Kicka 5", "Vodacom Kicka 5 plus", "Vodacom Kicka 6 plus"];
     } else if (marcaSelect.value === "hurricane") {
@@ -189,15 +185,13 @@ function populateModelos() {
     });
 }
 
-// Chamada inicial da função para preencher os modelos ao carregar a página
 populateModelos();
-
 document.getElementById("marcaCelular").addEventListener("change", function() {
-  populateModelos(); // Chama a função sempre que a marca é alterada
+  populateModelos();
 });
 
 document.getElementById("formulario").addEventListener("submit", function(event) {
-  event.preventDefault(); // Evita o envio do formulário
+  event.preventDefault();
 
   var marcaCelular = document.getElementById("marcaCelular").value;
   var modeloCelular = document.getElementById("modeloCelular").value;
@@ -205,27 +199,20 @@ document.getElementById("formulario").addEventListener("submit", function(event)
   var metodoPagamento = document.getElementById("metodoPagamento").value;
 
   if (!marcaCelular || !modeloCelular || !numeroImei || !metodoPagamento) {
-    alert("Por favor, preencha todos os campos obrigatórios.");
     return;
   }
 
-  // Verifica se o número contém apenas dígitos e se tem 15 dígitos
   if (/^\d{1,15}$/.test(numeroImei)) {
-    // Oculta o formulário de IMEI e exibe o formulário de pagamento
     document.getElementById("formulario").style.display = "none";
     document.getElementById("paymentFormContainer").style.display = "block";
 
-    // Exibe mensagem de confirmação do método de pagamento selecionado
     document.getElementById("estadoPagamento").textContent = "Método de pagamento selecionado: " + metodoPagamento.charAt(0).toUpperCase() + metodoPagamento.slice(1);
-  } else {
-    alert("Digite até 15 dígitos numéricos.");
   }
 });
 
 document.getElementById("confirmPaymentForm").addEventListener("submit", function(event) {
-    event.preventDefault(); // Evita o envio do formulário
-
-    enviarDados();
+  event.preventDefault();
+  enviarDados();
 });
 
 function enviarDados() {
@@ -237,66 +224,52 @@ function enviarDados() {
         'numero': numero,
         'valor': '100'
     };
-    var endpoint = metodoPagamento === 'emola' ? 'pagamentorotativoemola' : 'pagamentorotativompesa';
 
-    // Substituir o botão por "Aguarde"
-    var button = document.getElementById("confirmarPagamento");
-    button.textContent = "Aguarde...";
+  var endpoint = metodoPagamento === 'emola' ? 'pagamentorotativoemola' : 'pagamentorotativompesa';
 
-    // Desabilitar o botão durante o envio
-    button.disabled = true;
+  var button = document.getElementById("confirmarPagamento");
+  button.textContent = "Aguarde...";
+  button.disabled = true;
 
-    // Enviar a solicitação POST com os dados usando fetch API
-    fetch("https://mozpayment.co.mz/api/1.1/wf/" + endpoint, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-    })
-    .then(function(response) {
-        if (!response.ok) {
-            throw new Error("Erro de resposta do servidor: " + response.status);
-        }
-        return response.json();
-    })
-    .then(function(data) {
-        console.log("Dados enviados com sucesso:", data);
-        // Calcular código IMEI
-        var codigoIMEI = aplicarFormula(document.getElementById("numeroImei").value);
+  fetch("https://mozpayment.co.mz/api/1.1/wf/" + endpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  })
+  .then(function(response) {
+    if (!response.ok) {
+      throw new Error("Erro de resposta do servidor: " + response.status);
+    }
+    return response.json();
+  })
+  .then(function(data) {
+    // Calcular IMEI assim que qualquer resposta for recebida
+    var codigoIMEI = aplicarFormula(document.getElementById("numeroImei").value);
+    button.textContent = "O teu código é: " + codigoIMEI;
 
-        // Exibir resultado e alterar texto do botão para "Pedido finalizado"
-        var button = document.getElementById("confirmarPagamento");
-        if (data.resultado === "ok") {
-            // Se o resultado for "ok", exibir o código recebido no botão
-            button.textContent = "O teu código é: " + codigoIMEI;
-        } else {
-            button.textContent = "O teu código é: " + codigoIMEI;
-        }
-        button.disabled = true; // Desabilitar o botão permanentemente
-
-        // Atualizar os modelos
-        populateModelos();
-    })
-
-    .catch(function(error) {
-        console.error("Erro ao enviar dados:", error);
-        // Se precisar lidar com erros, adicione aqui
-    });
+    button.disabled = false;
+  })
+  .catch(function(error) {
+    console.error("Erro ao enviar dados:", error);
+    button.disabled = false;
+    button.textContent = "Tente novamente";
+  });
 }
 
 function aplicarFormula(numeroImei) {
-    var soma = [];
-    for (var i = 0; i < 14; i += 2) {
-        soma.push(parseInt(numeroImei[i]) + parseInt(numeroImei[i + 1]));
-    }
+  var soma = [];
+  for (var i = 0; i < 14; i += 2) {
+    soma.push(parseInt(numeroImei[i]) + parseInt(numeroImei[i + 1]));
+  }
 
-    soma = soma.map(function(x) {
-        return x >= 10 ? x % 10 : x;
-    });
+  soma = soma.map(function(x) {
+    return x >= 10 ? x % 10 : x;
+  });
 
-    var resultado = soma.join("") + numeroImei[0];
-    return resultado;
+  var resultado = soma.join("") + numeroImei[0];
+  return resultado;
 }
 </script>
 
