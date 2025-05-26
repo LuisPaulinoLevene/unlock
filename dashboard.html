@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Validador de IMEI</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+
+    input, select, button {
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    #resultado {
+      margin-top: 20px;
+      font-weight: bold;
+      color: green;
+    }
+
+    #erro {
+      margin-top: 20px;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Calcular IMEI</h1>
+
+  <label for="numero">Digite o número (15 dígitos):</label><br>
+  <input type="text" id="numero" placeholder="Ex: 123456789012345"><br><br>
+
+  <label for="formula">Escolha a fórmula:</label><br>
+  <select id="formula">
+    <option value="1">Fórmula 1</option>
+    <option value="2">Fórmula 2</option>
+    <option value="3">Fórmula 3</option>
+  </select><br><br>
+
+  <button onclick="calcular()">Calcular</button>
+
+  <div id="resultado"></div>
+  <div id="erro"></div>
+
+  <script>
+    function calcular() {
+      const numero = document.getElementById('numero').value.trim();
+      const formula = parseInt(document.getElementById('formula').value);
+      const resultadoDiv = document.getElementById('resultado');
+      const erroDiv = document.getElementById('erro');
+
+      resultadoDiv.textContent = '';
+      erroDiv.textContent = '';
+
+      if (numero.length !== 15 || !/^\d{15}$/.test(numero)) {
+        erroDiv.textContent = 'Por favor, digite um número com exatamente 15 dígitos numéricos.';
+        return;
+      }
+
+      fetch('https://code-theta-two.vercel.app/calcular/', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          numero: numero,
+          formula: formula
+        })
+      })
+      .then(response => {
+        return response.json().then(data => {
+          if (!response.ok) {
+            throw new Error(data.detail || 'Erro ao se comunicar com o servidor.');
+          }
+          return data;
+        });
+      })
+      .then(data => {
+        resultadoDiv.textContent = 'O teu codigo e: ' + data.resultado;
+      })
+      .catch(error => {
+        erroDiv.textContent = 'Erro: ' + error.message;
+      });
+    }
+  </script>
+
+</body>
+</html>

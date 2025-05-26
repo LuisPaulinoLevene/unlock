@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Consulta IMEI e Seleção de Marca/Modelo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-image: linear-gradient(to right, #4facfe, #00f2fe);
+    }
+    .container {
+      max-width: 400px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px #ccc;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input[type="text"], select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      box-sizing: border-box;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    #mensagem, #resultado, #erro, #saldo {
+      margin-top: 20px;
+      font-weight: bold;
+      text-align: center;
+    }
+    #resultado {
+      color: green;
+    }
+    #erro {
+      color: red;
+    }
+    #saldo {
+      color: #333;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px;
+      width: 100%;
+      background-color: #4285f4;
+      border: none;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    button:disabled {
+      background-color: #999;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container" id="main-container" style="display:none;">
+    <h2 style="text-align: center;">Calculador de codigo de desbloqueio de rede</h2>
+
+    <input type="text" id="numero" placeholder="Digite o IMEI (15 dígitos)" maxlength="15" />
+
+    <select id="marca" disabled>
+      <option value="">-- Selecione a marca --</option>
+    </select>
+
+    <select id="modelo" disabled>
+      <option value="">-- Selecione o modelo --</option>
+    </select>
+
+    <div id="saldo"></div>
+
+    <button id="btnCalcular" style="display:none;" disabled>Calcular código</button>
+    <button id="btnDepositar" style="display:none;">Depositar</button>
+
+    <div id="resultado"></div>
+    <div id="erro"></div>
+    <div id="mensagem"></div>
+  </div>
+
+  <!-- Link Admin -->
+  <div style="text-align: center; margin-top: 20px;">
+    <a href="admin.html" style="color: yellow; font-weight: bold; text-decoration: none;">Admin?</a>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc,
+      updateDoc,
+    } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+    } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCGHm9YMriBR5lBE_duBDOgwZ9gfrzAvkY",
+      authDomain: "codigo-c7137.firebaseapp.com",
+      projectId: "codigo-c7137",
+      storageBucket: "codigo-c7137.appspot.com",
+      messagingSenderId: "879035813414",
+      appId: "1:879035813414:web:ce941d9f9b8b87e8b1a0e7",
+      measurementId: "G-MCN8JMVXYZ",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    const marcaSelect = document.getElementById("marca");
+    const modeloSelect = document.getElementById("modelo");
+    const mensagemDiv = document.getElementById("mensagem");
+    const resultadoDiv = document.getElementById("resultado");
+    const erroDiv = document.getElementById("erro");
+    const mainContainer = document.getElementById("main-container");
+    const btnCalcular = document.getElementById("btnCalcular");
+    const btnDepositar = document.getElementById("btnDepositar");
+    const numeroInput = document.getElementById("numero");
+    const saldoDiv = document.getElementById("saldo");
+
+    let userId = null;
+    let saldoAtual = 0;
+    let marcasModelos = {};
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        userId = user.uid;
+        mainContainer.style.display = "block";
+        mensagemDiv.textContent = "";
+
+        await carregarMarcasModelos();
+        await inicializarSaldoUsuario(userId);
+        atualizarUI();
+      } else {
+        mainContainer.style.display = "none";
+        mensagemDiv.textContent = "Usuário não autenticado. Por favor, faça login.";
+      }
+    });
+
+    async function carregarMarcasModelos() {
+      try {
+        const docRef = doc(db, "users", "rACXL88QnDVSQckqdcM6yNV4GiJ2");
+        const docSnap = await getDoc(docRef);
+
+        if (!docSnap.exists()) {
+          mensagemDiv.innerText = "Documento com marcas/modelos não encontrado.";
+          return;
+        }
+
+        const data = docSnap.data();
+
+        if (!data.marcas || typeof data.marcas !== "object") {
+          mensagemDiv.innerText = "Nenhuma marca/modelo cadastrada.";
+          return;
+        }
+
+        mensagemDiv.innerText = "";
+        marcasModelos = data.marcas;
+
+        marcaSelect.innerHTML = '<option value="">-- Selecione a marca --</option>';
+        modeloSelect.innerHTML = '<option value="">-- Selecione o modelo --</option>';
+        modeloSelect.disabled = true;
+        btnCalcular.style.display = "none";
+        btnCalcular.disabled = true;
+
+        for (const marca of Object.keys(marcasModelos)) {
+          const option = document.createElement("option");
+          option.value = marca;
+          option.textContent = marca;
+          marcaSelect.appendChild(option);
+        }
+
+        marcaSelect.disabled = false;
+
+      } catch (error) {
+        mensagemDiv.innerText = "Erro ao carregar marcas: " + error.message;
+      }
+    }
+
+    marcaSelect.addEventListener("change", () => {
+      const marcaSelecionada = marcaSelect.value;
+      modeloSelect.innerHTML = '<option value="">-- Selecione o modelo --</option>';
+      resultadoDiv.textContent = "";
+      erroDiv.textContent = "";
+      btnCalcular.style.display = "none";
+      btnCalcular.disabled = true;
+
+      if (!marcaSelecionada) {
+        modeloSelect.disabled = true;
+        return;
+      }
+
+      const modelosObj = marcasModelos[marcaSelecionada] || {};
+      modeloSelect.disabled = false;
+
+      for (const modelo in modelosObj) {
+        const option = document.createElement("option");
+        option.value = modelo;
+        option.textContent = modelo;
+        option.setAttribute("data-formula", modelosObj[modelo]);
+        modeloSelect.appendChild(option);
+      }
+    });
+
+    modeloSelect.addEventListener("change", () => {
+      resultadoDiv.textContent = "";
+      erroDiv.textContent = "";
+      if (modeloSelect.value && saldoAtual >= 50) {
+        btnCalcular.style.display = "block";
+        btnCalcular.disabled = false;
+      } else {
+        btnCalcular.style.display = "none";
+        btnCalcular.disabled = true;
+      }
+    });
+
+    btnCalcular.addEventListener("click", calcular);
+
+    btnDepositar.addEventListener("click", () => {
+      window.location.href = "deposito.html";
+    });
+
+    async function inicializarSaldoUsuario(uid) {
+      try {
+        const userDocRef = doc(db, "users", uid);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (!userDocSnap.exists()) {
+          // Criando um novo documento de usuário com saldo 0
+          await setDoc(userDocRef, { saldo: 0.0 });
+          saldoAtual = 0;
+        } else {
+          const data = userDocSnap.data();
+          // Se o saldo não existir ou for inválido, definimos o saldo como 0
+          if (typeof data.saldo === 'undefined' || isNaN(data.saldo)) {
+            await updateDoc(userDocRef, { saldo: 0.0 });
+            saldoAtual = 0;
+          } else {
+            saldoAtual = data.saldo;
+          }
+        }
+      } catch (error) {
+        mensagemDiv.textContent = "Erro ao carregar saldo: " + error.message;
+      }
+    }
+
+    function atualizarUI() {
+      if (typeof saldoAtual === 'number' && !isNaN(saldoAtual)) {
+        saldoDiv.textContent = `Saldo atual: ${saldoAtual.toFixed(2)} MZN`;
+      } else {
+        saldoDiv.textContent = `Saldo inválido`;
+      }
+
+      if (saldoAtual < 50) {
+        btnCalcular.style.display = "none";
+        btnCalcular.disabled = true;
+        btnDepositar.style.display = "block";
+        mensagemDiv.textContent = "Saldo insuficiente para calcular. Por favor, deposite no minimo 50.00 MZN. Cada código custa 50.00 MZN";
+      } else {
+        btnDepositar.style.display = "none";
+        if (modeloSelect.value) {
+          btnCalcular.style.display = "block";
+          btnCalcular.disabled = false;
+        } else {
+          btnCalcular.style.display = "none";
+          btnCalcular.disabled = true;
+        }
+        mensagemDiv.textContent = "";
+      }
+    }
+
+    async function atualizarSaldoUsuario(novoSaldo) {
+      try {
+        const userDocRef = doc(db, "users", userId);
+        await updateDoc(userDocRef, { saldo: novoSaldo });
+        saldoAtual = novoSaldo;
+        atualizarUI();
+      } catch (error) {
+        erroDiv.textContent = "Erro ao atualizar saldo: " + error.message;
+      }
+    }
+
+    async function calcular() {
+      const numero = numeroInput.value.trim();
+      resultadoDiv.textContent = '';
+      erroDiv.textContent = '';
+
+      if (numero.length !== 15 || !/^\d{15}$/.test(numero)) {
+        erroDiv.textContent = 'Por favor, digite um número com exatamente 15 dígitos numéricos.';
+        return;
+      }
+
+      const marca = marcaSelect.value;
+      const modelo = modeloSelect.value;
+
+      if (!marca) {
+        erroDiv.textContent = "Selecione uma marca.";
+        return;
+      }
+      if (!modelo) {
+        erroDiv.textContent = "Selecione um modelo.";
+        return;
+      }
+      if (saldoAtual < 50) {
+        erroDiv.textContent = "Saldo insuficiente para calcular. Deposite para continuar.";
+        return;
+      }
+
+      let formula = marcasModelos[marca][modelo];
+      let formulaInt = parseInt(formula);
+      if (isNaN(formulaInt)) {
+        erroDiv.textContent = "Fórmula inválida para este modelo.";
+        return;
+      }
+
+      try {
+        const response = await fetch('https://code-theta-two.vercel.app/calcular/', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            numero: numero,
+            formula: formulaInt
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.detail || 'Erro ao se comunicar com o servidor.');
+        }
+
+        resultadoDiv.textContent = 'O teu código é: ' + data.resultado;
+        erroDiv.textContent = "";
+
+        const novoSaldo = saldoAtual - 50;
+        await atualizarSaldoUsuario(novoSaldo);
+
+      } catch (error) {
+        erroDiv.textContent = 'Erro: ' + error.message;
+      }
+    }
+  </script>
+
+</body>
+</html>
