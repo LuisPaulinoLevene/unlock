@@ -143,11 +143,11 @@
           cellEmail.textContent = userData.email || "Email não disponível"; // Exibe email do usuário
 
           // Verificar se o saldo existe e é um número válido
-          const saldo = parseFloat(userData.saldo);
+          const saldo = parseInt(userData.saldo, 10);  // Garantir que o saldo seja tratado como inteiro
           if (!isNaN(saldo)) {
-            cellSaldo.textContent = saldo.toFixed(2);  // Aqui estamos utilizando .toFixed com um número válido
+            cellSaldo.textContent = saldo.toFixed(0);  // Exibe como número inteiro
           } else {
-            cellSaldo.textContent = "0.00";  // Se o saldo não for válido, exibimos 0.00
+            cellSaldo.textContent = "0";  // Se o saldo não for válido, exibimos 0
           }
 
           const saldoInput = document.createElement("input");
@@ -161,7 +161,7 @@
           okButton.textContent = "Ok";
           okButton.disabled = true;
           okButton.onclick = async () => {
-            const novoSaldo = parseFloat(saldoInput.value);
+            const novoSaldo = parseInt(saldoInput.value, 10);  // Garantir que o valor inserido seja um inteiro
             if (isNaN(novoSaldo) || novoSaldo <= 0) {
               alert("Por favor, insira um valor válido para o saldo.");
               return;
@@ -192,10 +192,10 @@
 
         if (userDoc.exists()) {
           const userData = userDoc.data();
-          const saldoAtual = parseFloat(userData.saldo) || 0;  // Garantir que o saldo atual seja numérico
+          const saldoAtual = parseInt(userData.saldo, 10) || 0;  // Garantir que o saldo atual seja um número inteiro
           const saldoFinal = saldoAtual + novoSaldo;
 
-          await updateDoc(userRef, { saldo: saldoFinal.toFixed(2) });
+          await updateDoc(userRef, { saldo: saldoFinal });
 
           successMessage.style.display = 'block';
           setTimeout(() => {
@@ -217,10 +217,10 @@
       onSnapshot(usersRef, (snapshot) => {
         snapshot.docChanges().forEach(change => {
           const userId = change.doc.id;
-          const saldoAtualizado = change.doc.data().saldo || 0;
+          const saldoAtualizado = parseInt(change.doc.data().saldo, 10) || 0;  // Garantir que o saldo seja um inteiro
           const row = usersTable.querySelector(`tr[data-id='${userId}']`);
           if (row) {
-            row.querySelector('td:nth-child(3)').textContent = saldoAtualizado.toFixed(2);
+            row.querySelector('td:nth-child(3)').textContent = saldoAtualizado.toFixed(0);  // Exibir sem decimais
           }
         });
       });
