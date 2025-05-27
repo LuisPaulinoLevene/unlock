@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Calculador de codigo de desbloqueio de rede</title>
+  <title>Calculador de código de desbloqueio de rede</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -12,7 +12,6 @@
       background-image: linear-gradient(to right, #4facfe, #00f2fe);
     }
 
-    /* Barra de menu */
     .navbar {
       position: fixed;
       top: 0;
@@ -41,7 +40,6 @@
       border-radius: 4px;
     }
 
-    /* Popups */
     .modal {
       display: none;
       position: fixed;
@@ -60,15 +58,15 @@
       padding: 20px;
       border-radius: 5px;
       width: 90%;
-      max-width: 400px; /* Limita o tamanho máximo da largura */
-      box-sizing: border-box; /* Garante que o padding não transborde */
+      max-width: 400px;
+      box-sizing: border-box;
     }
 
     .modal input {
       width: 100%;
       padding: 10px;
       margin: 8px 0;
-      box-sizing: border-box; /* Adicionado para evitar o transbordamento */
+      box-sizing: border-box;
       border: 1px solid #ccc;
       border-radius: 4px;
     }
@@ -89,14 +87,13 @@
       margin-top: 20px;
       font-weight: bold;
     }
-
   </style>
 </head>
 <body>
 
   <!-- Barra de menu -->
   <div class="navbar">
-    <h1>Calculador de codigo de desbloqueio de rede</h1>
+    <h1>Calculador de código de desbloqueio de rede</h1>
     <div>
       <button onclick="openModal('signup-modal')">Cadastrar</button>
       <button onclick="openModal('login-modal')">Entrar</button>
@@ -133,7 +130,12 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-analytics.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+    import {
+      getAuth,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCGHm9YMriBR5lBE_duBDOgwZ9gfrzAvkY",
@@ -148,6 +150,22 @@
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const auth = getAuth(app);
+
+    // 🔁 Redirecionar se usuário já logado e acessou nos últimos 7 dias
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const lastLoginStr = localStorage.getItem('lastLogin');
+        if (lastLoginStr) {
+          const lastLogin = new Date(lastLoginStr);
+          const now = new Date();
+          const diffInMs = now - lastLogin;
+          const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+          if (diffInDays < 7) {
+            window.location.href = "calcular.html";
+          }
+        }
+      }
+    });
 
     // Cadastro
     document.getElementById('signup-form').addEventListener('submit', (e) => {
@@ -172,13 +190,13 @@
 
       signInWithEmailAndPassword(auth, email, password)
         .then(() => {
+          localStorage.setItem('lastLogin', new Date().toISOString());
           document.getElementById('message').innerText = "Login realizado com sucesso!";
           closeModals();
-          // Redireciona para dashboard.html
           window.location.href = "calcular.html";
         })
-        .catch((error) => {
-          document.getElementById('message').innerText = "Erro no login, verifica os seus dados de acesso";
+        .catch(() => {
+          document.getElementById('message').innerText = "Erro no login, verifique os seus dados de acesso.";
         });
     });
 

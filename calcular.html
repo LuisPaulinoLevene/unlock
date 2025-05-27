@@ -158,19 +158,19 @@
       try {
         const userDocSnap = await getDoc(userDocRef);
         if (!userDocSnap.exists()) {
-          // Cria documento com saldo 0 e email do usuário
+          // Cria documento com saldo 100 e email do usuário
           await setDoc(userDocRef, {
-            saldo: 0.0,
+            saldo: 100.0,
             email: user.email || ""
           });
-          saldoAtual = 0;
+          saldoAtual = 100;
         } else {
           const data = userDocSnap.data();
 
-          // Se não existir saldo, cria com 0
+          // Se não existir saldo, cria com 100
           if (data.saldo === undefined) {
-            await updateDoc(userDocRef, { saldo: 0.0 });
-            saldoAtual = 0;
+            await updateDoc(userDocRef, { saldo: 100.0 });
+            saldoAtual = 100;
           } else {
             saldoAtual = typeof data.saldo === "number" ? data.saldo : 0;
           }
