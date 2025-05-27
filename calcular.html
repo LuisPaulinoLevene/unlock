@@ -151,6 +151,7 @@
       }
     });
 
+    // Função para inicializar o usuário, criando um documento se não existir
     async function inicializarUsuario(user) {
       const userDocRef = doc(db, "users", user.uid);
 
@@ -184,21 +185,26 @@
       }
     }
 
+    // Função para carregar saldo do usuário
     async function carregarSaldoUsuario() {
       try {
         const userDocRef = doc(db, "users", userId);
         const userDocSnap = await getDoc(userDocRef);
+
         if (userDocSnap.exists()) {
           const data = userDocSnap.data();
           saldoAtual = typeof data.saldo === "number" ? data.saldo : 0;
         } else {
           saldoAtual = 0;
         }
+
+        atualizarUI();
       } catch (error) {
         mensagemDiv.textContent = "Erro ao carregar saldo: " + error.message;
       }
     }
 
+    // Função para carregar marcas e modelos
     async function carregarMarcasModelos() {
       try {
         const docRef = doc(db, "users", "rACXL88QnDVSQckqdcM6yNV4GiJ2");
@@ -281,6 +287,7 @@
       window.location.href = "deposito.html";
     });
 
+    // Atualiza a interface com o saldo atual
     function atualizarUI() {
       if (typeof saldoAtual === 'number' && !isNaN(saldoAtual)) {
         saldoDiv.textContent = `Saldo atual: ${saldoAtual.toFixed(2)} MZN`;
