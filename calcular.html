@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Calculador de codigo</title>
+  <title>Calculador de código</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -66,26 +66,19 @@
   </style>
 </head>
 <body>
-
   <div class="container" id="main-container" style="display:none;">
     <h2 style="text-align: center;">Calculador de código de desbloqueio de rede</h2>
-
     <input type="text" id="numero" placeholder="Digite o IMEI (15 dígitos)" maxlength="15" />
-
     <select id="marca" disabled>
       <option value="">-- Selecione a marca --</option>
     </select>
-
     <select id="modelo" disabled>
       <option value="">-- Selecione o modelo --</option>
     </select>
-
     <div id="saldo"></div>
     <div id="email"></div>
-
     <button id="btnCalcular" style="display:none;" disabled>Calcular código</button>
     <button id="btnDepositar" style="display:none;">Depositar</button>
-
     <div id="resultado"></div>
     <div id="erro"></div>
     <div id="mensagem"></div>
@@ -171,14 +164,20 @@
           });
           saldoAtual = 0;
         } else {
-          // Documento existe, atualiza email se diferente
           const data = userDocSnap.data();
 
+          // Se não existir saldo, cria com 0
+          if (data.saldo === undefined) {
+            await updateDoc(userDocRef, { saldo: 0.0 });
+            saldoAtual = 0;
+          } else {
+            saldoAtual = typeof data.saldo === "number" ? data.saldo : 0;
+          }
+
+          // Atualiza email se diferente
           if (data.email !== user.email) {
             await updateDoc(userDocRef, { email: user.email || "" });
           }
-
-          saldoAtual = typeof data.saldo === "number" ? data.saldo : 0;
         }
       } catch (error) {
         mensagemDiv.textContent = "Erro ao inicializar usuário: " + error.message;
@@ -234,7 +233,6 @@
         }
 
         marcaSelect.disabled = false;
-
       } catch (error) {
         mensagemDiv.innerText = "Erro ao carregar marcas: " + error.message;
       }
@@ -382,6 +380,5 @@
       }
     }
   </script>
-
 </body>
 </html>
