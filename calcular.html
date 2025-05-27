@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Consulta IMEI e Seleção de Marca/Modelo</title>
+  <title>Calculador de codigo</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -30,7 +30,7 @@
       border-radius: 5px;
       border: 1px solid #ccc;
     }
-    #mensagem, #resultado, #erro, #saldo {
+    #mensagem, #resultado, #erro, #saldo, #email {
       margin-top: 20px;
       font-weight: bold;
       text-align: center;
@@ -43,6 +43,10 @@
     }
     #saldo {
       color: #333;
+    }
+    #email {
+      color: #555;
+      font-weight: normal;
     }
     button {
       margin-top: 15px;
@@ -64,7 +68,7 @@
 <body>
 
   <div class="container" id="main-container" style="display:none;">
-    <h2 style="text-align: center;">Calculador de codigo de desbloqueio de rede</h2>
+    <h2 style="text-align: center;">Calculador de código de desbloqueio de rede</h2>
 
     <input type="text" id="numero" placeholder="Digite o IMEI (15 dígitos)" maxlength="15" />
 
@@ -77,6 +81,7 @@
     </select>
 
     <div id="saldo"></div>
+    <div id="email"></div>
 
     <button id="btnCalcular" style="display:none;" disabled>Calcular código</button>
     <button id="btnDepositar" style="display:none;">Depositar</button>
@@ -129,6 +134,7 @@
     const btnDepositar = document.getElementById("btnDepositar");
     const numeroInput = document.getElementById("numero");
     const saldoDiv = document.getElementById("saldo");
+    const emailDiv = document.getElementById("email");
 
     let userId = null;
     let saldoAtual = 0;
@@ -139,15 +145,60 @@
         userId = user.uid;
         mainContainer.style.display = "block";
         mensagemDiv.textContent = "";
+        emailDiv.textContent = `Email: ${user.email || 'Email não disponível'}`;
 
+        await inicializarUsuario(user);
         await carregarMarcasModelos();
-        await inicializarSaldoUsuario(userId);
+        await carregarSaldoUsuario();
         atualizarUI();
       } else {
         mainContainer.style.display = "none";
         mensagemDiv.textContent = "Usuário não autenticado. Por favor, faça login.";
+        emailDiv.textContent = "";
       }
     });
+
+    async function inicializarUsuario(user) {
+      const userDocRef = doc(db, "users", user.uid);
+
+      try {
+        const userDocSnap = await getDoc(userDocRef);
+        if (!userDocSnap.exists()) {
+          // Cria documento com saldo 0 e email do usuário
+          await setDoc(userDocRef, {
+            saldo: 0.0,
+            email: user.email || ""
+          });
+          saldoAtual = 0;
+        } else {
+          // Documento existe, atualiza email se diferente
+          const data = userDocSnap.data();
+
+          if (data.email !== user.email) {
+            await updateDoc(userDocRef, { email: user.email || "" });
+          }
+
+          saldoAtual = typeof data.saldo === "number" ? data.saldo : 0;
+        }
+      } catch (error) {
+        mensagemDiv.textContent = "Erro ao inicializar usuário: " + error.message;
+      }
+    }
+
+    async function carregarSaldoUsuario() {
+      try {
+        const userDocRef = doc(db, "users", userId);
+        const userDocSnap = await getDoc(userDocRef);
+        if (userDocSnap.exists()) {
+          const data = userDocSnap.data();
+          saldoAtual = typeof data.saldo === "number" ? data.saldo : 0;
+        } else {
+          saldoAtual = 0;
+        }
+      } catch (error) {
+        mensagemDiv.textContent = "Erro ao carregar saldo: " + error.message;
+      }
+    }
 
     async function carregarMarcasModelos() {
       try {
@@ -232,30 +283,6 @@
       window.location.href = "deposito.html";
     });
 
-    async function inicializarSaldoUsuario(uid) {
-      try {
-        const userDocRef = doc(db, "users", uid);
-        const userDocSnap = await getDoc(userDocRef);
-
-        if (!userDocSnap.exists()) {
-          // Criando um novo documento de usuário com saldo 0
-          await setDoc(userDocRef, { saldo: 0.0 });
-          saldoAtual = 0;
-        } else {
-          const data = userDocSnap.data();
-          // Se o saldo não existir ou for inválido, definimos o saldo como 0
-          if (typeof data.saldo === 'undefined' || isNaN(data.saldo)) {
-            await updateDoc(userDocRef, { saldo: 0.0 });
-            saldoAtual = 0;
-          } else {
-            saldoAtual = data.saldo;
-          }
-        }
-      } catch (error) {
-        mensagemDiv.textContent = "Erro ao carregar saldo: " + error.message;
-      }
-    }
-
     function atualizarUI() {
       if (typeof saldoAtual === 'number' && !isNaN(saldoAtual)) {
         saldoDiv.textContent = `Saldo atual: ${saldoAtual.toFixed(2)} MZN`;
@@ -267,7 +294,7 @@
         btnCalcular.style.display = "none";
         btnCalcular.disabled = true;
         btnDepositar.style.display = "block";
-        mensagemDiv.textContent = "Saldo insuficiente para calcular. Por favor, deposite no minimo 50.00 MZN. Cada código custa 50.00 MZN";
+        mensagemDiv.textContent = "Saldo insuficiente para calcular. Por favor, deposite no mínimo 50.00 MZN. Cada código custa 50.00 MZN";
       } else {
         btnDepositar.style.display = "none";
         if (modeloSelect.value) {
