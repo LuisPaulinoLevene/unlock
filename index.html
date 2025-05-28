@@ -20,14 +20,9 @@
       background-color: #333;
       color: white;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       padding: 15px 20px;
       z-index: 999;
-    }
-
-    .navbar h1 {
-      margin: 0;
-      font-size: 20px;
     }
 
     .navbar button {
@@ -38,6 +33,15 @@
       margin-left: 10px;
       cursor: pointer;
       border-radius: 4px;
+    }
+
+    .header-title {
+      text-align: center;
+      color: white;
+      margin-top: 30px;
+      font-size: 28px;
+      font-weight: bold;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
     }
 
     .modal {
@@ -93,11 +97,15 @@
 
   <!-- Barra de menu -->
   <div class="navbar">
-    <h1>Calculadora de código de desbloqueio de rede</h1>
     <div>
       <button onclick="openModal('signup-modal')">Cadastrar</button>
       <button onclick="openModal('login-modal')">Entrar</button>
     </div>
+  </div>
+
+  <!-- Novo título fora da navbar -->
+  <div class="header-title">
+    <h1>Calculadora de código de desbloqueio de rede</h1>
   </div>
 
   <!-- Modal de Cadastro -->
@@ -151,7 +159,7 @@
     const analytics = getAnalytics(app);
     const auth = getAuth(app);
 
-    // 🔁 Redirecionar se usuário já logado e acessou nos últimos 7 dias
+    // Redirecionar se usuário logado recentemente
     onAuthStateChanged(auth, (user) => {
       if (user) {
         const lastLoginStr = localStorage.getItem('lastLogin');
@@ -200,7 +208,7 @@
         });
     });
 
-    // Abrir e fechar modais
+    // Funções para modais
     window.openModal = function (id) {
       document.getElementById(id).style.display = 'block';
     };
