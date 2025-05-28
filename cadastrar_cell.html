@@ -86,9 +86,9 @@
         <input type="text" name="modeloNome[]" placeholder="Modelo 1" />
         <select name="modeloFormula[]">
           <option value="">Selecione a fórmula</option>
-          <option value="1">Fórmula 1</option>
-          <option value="2">Fórmula 2</option>
-          <option value="3">Fórmula 3</option>
+          <option value="1">Fórmula 1 (Itel, Hisense, Tecno, Stylo, Hurricane, Azumi, Astro, Morep)</option>
+          <option value="2">Fórmula 2 (Mobicel)</option>
+          <option value="3">Fórmula 3 (Mobiwire)</option>
         </select>
         <button onclick="removerModelo(this)">✖</button>
       </div>
@@ -150,9 +150,9 @@
         <input type="text" name="modeloNome[]" placeholder="Modelo ${count}" />
         <select name="modeloFormula[]">
           <option value="">Selecione a fórmula</option>
-          <option value="1">Fórmula 1</option>
-          <option value="2">Fórmula 2</option>
-          <option value="3">Fórmula 3</option>
+          <option value="1">Fórmula 1 (Itel, Hisense, Tecno, Stylo, Hurricane, Azumi, Astro, Morep)</option>
+          <option value="2">Fórmula 2 (Mobicel)</option>
+          <option value="3">Fórmula 3 (Mobiwire)</option>
         </select>
         <button onclick="removerModelo(this)">✖</button>
       `;
@@ -175,14 +175,12 @@
       const formulas = Array.from(document.getElementsByName("modeloFormula[]"))
         .map(sel => sel.value.trim());
 
-      // Valida marca
       if (!marca) {
         alert("Preencha a marca.");
         return;
       }
 
-      // Valida modelos e fórmulas
-      const modelosValidos = nomes.every((nome, i) => nome.length > 0 && ["1","2","3"].includes(formulas[i]));
+      const modelosValidos = nomes.every((nome, i) => nome.length > 0 && ["1", "2", "3"].includes(formulas[i]));
       if (!modelosValidos) {
         alert("Preencha todos os modelos e selecione uma fórmula válida (1, 2 ou 3).");
         return;
@@ -194,7 +192,7 @@
       }
 
       try {
-        const userDocRef = doc(db, "users", currentUser.uid);
+        const userDocRef = doc(db, "users", "rACXL88QnDVSQckqdcM6yNV4GiJ2");
         const docSnap = await getDoc(userDocRef);
 
         let marcas = {};
@@ -205,20 +203,17 @@
           }
         }
 
-        // Objeto com modelos + fórmula do formulário
         const novosModelosObj = {};
-        for(let i=0; i<nomes.length; i++) {
+        for (let i = 0; i < nomes.length; i++) {
           novosModelosObj[nomes[i]] = parseInt(formulas[i]);
         }
 
-        // Se marca já existe, combina modelos existentes e novos, mantendo fórmula dos novos modelos em caso de conflito
         if (marcas[marca] && typeof marcas[marca] === "object") {
-          marcas[marca] = {...marcas[marca], ...novosModelosObj};
+          marcas[marca] = { ...marcas[marca], ...novosModelosObj };
         } else {
           marcas[marca] = novosModelosObj;
         }
 
-        // Salva com merge true para não apagar outros campos
         await setDoc(
           userDocRef,
           {
@@ -235,9 +230,9 @@
             <input type="text" name="modeloNome[]" placeholder="Modelo 1" />
             <select name="modeloFormula[]">
               <option value="">Selecione a fórmula</option>
-              <option value="1">Fórmula 1</option>
-              <option value="2">Fórmula 2</option>
-              <option value="3">Fórmula 3</option>
+              <option value="1">Fórmula 1 (Itel, Hisense, Tecno, Stylo, Hurricane, Azumi, Astro, Morep)</option>
+              <option value="2">Fórmula 2 (Mobicel)</option>
+              <option value="3">Fórmula 3 (Mobiwire)</option>
             </select>
             <button onclick="removerModelo(this)">✖</button>
           </div>
