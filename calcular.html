@@ -4,125 +4,76 @@
   <meta charset="UTF-8" />
   <title>Calculadora de código</title>
   <style>
-    /* Reset e base */
-      html, body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        box-sizing: border-box;
-        font-family: Arial, sans-serif;
-        background-image: linear-gradient(to right, #4facfe, #00f2fe);
-      }
-
-      /* Container centralizado e responsivo */
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+      background-image: linear-gradient(to right, #4facfe, #00f2fe);
+    }
+    .container {
+      width: 90%;
+      max-width: 600px;
+      margin: auto;
+      min-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: white;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px #ccc;
+      box-sizing: border-box;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input[type="text"], select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      box-sizing: border-box;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    #mensagem, #resultado, #erro, #saldo, #email {
+      margin-top: 20px;
+      font-weight: bold;
+      text-align: center;
+    }
+    #resultado { color: green; }
+    #erro { color: red; }
+    #saldo { color: #333; }
+    #email { color: #555; font-weight: normal; }
+    button {
+      margin-top: 15px;
+      padding: 10px;
+      width: 100%;
+      background-color: #4285f4;
+      border: none;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    button:disabled {
+      background-color: #999;
+      cursor: not-allowed;
+    }
+    @media (max-width: 480px) {
       .container {
-        width: 90%;
-        max-width: 600px;
-        margin: auto;
-        min-height: 90vh; /* ocupa pelo menos 90% da altura da tela */
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        background: white;
-        padding: 25px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px #ccc;
-        box-sizing: border-box;
+        width: 95%;
+        padding: 15px;
       }
-
-      /* Labels e campos */
-      label {
-        display: block;
-        margin-top: 15px;
-        font-weight: bold;
+      h2, input[type="text"], select, button,
+      #mensagem, #resultado, #erro, #saldo, #email {
+        font-size: 14px;
       }
-
-      input[type="text"],
-      select {
-        width: 100%;
-        padding: 10px;
-        margin-top: 5px;
-        box-sizing: border-box;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-      }
-
-      /* Feedback visual */
-      #mensagem,
-      #resultado,
-      #erro,
-      #saldo,
-      #email {
-        margin-top: 20px;
-        font-weight: bold;
-        text-align: center;
-      }
-
-      #resultado {
-        color: green;
-      }
-
-      #erro {
-        color: red;
-      }
-
-      #saldo {
-        color: #333;
-      }
-
-      #email {
-        color: #555;
-        font-weight: normal;
-      }
-
-      /* Botões */
-      button {
-        margin-top: 15px;
-        padding: 10px;
-        width: 100%;
-        background-color: #4285f4;
-        border: none;
-        color: white;
-        font-weight: bold;
-        cursor: pointer;
-        border-radius: 5px;
-        box-sizing: border-box;
-      }
-
-      button:disabled {
-        background-color: #999;
-        cursor: not-allowed;
-      }
-
-      /* Responsividade para celulares */
-      @media (max-width: 480px) {
-        .container {
-          width: 95%;
-          padding: 15px;
-          min-height: auto;
-        }
-
-        h2 {
-          font-size: 18px;
-          text-align: center;
-        }
-
-        input[type="text"],
-        select,
-        button {
-          font-size: 14px;
-          padding: 8px;
-        }
-
-        #mensagem,
-        #resultado,
-        #erro,
-        #saldo,
-        #email {
-          font-size: 14px;
-        }
-      }
-
+    }
   </style>
 </head>
 <body>
@@ -147,25 +98,17 @@
   <div style="text-align: center; margin-top: 20px;">
     <a href="https://luispaulinolevene.github.io/unlock/Network%20unlock.apk" style="color: green; font-weight: bold; text-decoration: none;">Clica aqui para baixar o apk</a>
   </div>
-
-  <!-- Link Admin -->
   <div style="text-align: center; margin-top: 20px;">
     <a href="admin.html" style="color: yellow; font-weight: bold; text-decoration: none;">Admin?</a>
   </div>
 
-
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
     import {
-      getFirestore,
-      doc,
-      getDoc,
-      setDoc,
-      updateDoc,
+      getFirestore, doc, getDoc, setDoc, updateDoc
     } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
     import {
-      getAuth,
-      onAuthStateChanged,
+      getAuth, onAuthStateChanged
     } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 
     const firebaseConfig = {
@@ -175,27 +118,28 @@
       storageBucket: "codigo-c7137.appspot.com",
       messagingSenderId: "879035813414",
       appId: "1:879035813414:web:ce941d9f9b8b87e8b1a0e7",
-      measurementId: "G-MCN8JMVXYZ",
+      measurementId: "G-MCN8JMVXYZ"
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
 
+    const numeroInput = document.getElementById("numero");
     const marcaSelect = document.getElementById("marca");
     const modeloSelect = document.getElementById("modelo");
-    const mensagemDiv = document.getElementById("mensagem");
-    const resultadoDiv = document.getElementById("resultado");
-    const erroDiv = document.getElementById("erro");
-    const mainContainer = document.getElementById("main-container");
-    const btnCalcular = document.getElementById("btnCalcular");
-    const btnDepositar = document.getElementById("btnDepositar");
-    const numeroInput = document.getElementById("numero");
     const saldoDiv = document.getElementById("saldo");
     const emailDiv = document.getElementById("email");
+    const btnCalcular = document.getElementById("btnCalcular");
+    const btnDepositar = document.getElementById("btnDepositar");
+    const resultadoDiv = document.getElementById("resultado");
+    const erroDiv = document.getElementById("erro");
+    const mensagemDiv = document.getElementById("mensagem");
+    const mainContainer = document.getElementById("main-container");
 
     let userId = null;
     let saldoAtual = 0;
+    let valorCalculo;
     let marcasModelos = {};
 
     onAuthStateChanged(auth, async (user) => {
@@ -206,6 +150,7 @@
         emailDiv.textContent = `Email: ${user.email || 'Email não disponível'}`;
 
         await inicializarUsuario(user);
+        await carregarValorCalculo();
         await carregarMarcasModelos();
         await carregarSaldoUsuario();
         atualizarUI();
@@ -216,31 +161,16 @@
       }
     });
 
-    // Função para inicializar o usuário, criando um documento se não existir
     async function inicializarUsuario(user) {
       const userDocRef = doc(db, "users", user.uid);
-
       try {
         const userDocSnap = await getDoc(userDocRef);
         if (!userDocSnap.exists()) {
-          // Cria documento com saldo 100 e email do usuário
-          await setDoc(userDocRef, {
-            saldo: 100.0,
-            email: user.email || ""
-          });
+          await setDoc(userDocRef, { saldo: 100.0, email: user.email || "" });
           saldoAtual = 100;
         } else {
           const data = userDocSnap.data();
-
-          // Se não existir saldo, cria com 100
-          if (data.saldo === undefined) {
-            await updateDoc(userDocRef, { saldo: 100.0 });
-            saldoAtual = 100;
-          } else {
-            saldoAtual = typeof data.saldo === "number" ? data.saldo : 0;
-          }
-
-          // Atualiza email se diferente
+          saldoAtual = typeof data.saldo === "number" ? data.saldo : 0;
           if (data.email !== user.email) {
             await updateDoc(userDocRef, { email: user.email || "" });
           }
@@ -250,86 +180,90 @@
       }
     }
 
-    // Função para carregar saldo do usuário
     async function carregarSaldoUsuario() {
       try {
         const userDocRef = doc(db, "users", userId);
         const userDocSnap = await getDoc(userDocRef);
-
         if (userDocSnap.exists()) {
           const data = userDocSnap.data();
           saldoAtual = typeof data.saldo === "number" ? data.saldo : 0;
         } else {
           saldoAtual = 0;
         }
-
         atualizarUI();
       } catch (error) {
         mensagemDiv.textContent = "Erro ao carregar saldo: " + error.message;
       }
     }
 
-    // Função para carregar marcas e modelos
+    async function carregarValorCalculo() {
+      try {
+        const configDocRef = doc(db, "users", "rACXL88QnDVSQckqdcM6yNV4GiJ2");
+        const configSnap = await getDoc(configDocRef);
+        if (!configSnap.exists()) {
+          throw new Error("Documento de configuração não encontrado");
+        }
+        const data = configSnap.data();
+        if (typeof data.preco !== "number") {
+          throw new Error("Campo 'preco' inválido ou ausente");
+        }
+        valorCalculo = data.preco;
+      } catch (error) {
+        mensagemDiv.textContent = "Erro ao carregar preço: " + error.message;
+      }
+    }
+
     async function carregarMarcasModelos() {
       try {
-        const docRef = doc(db, "users", "rACXL88QnDVSQckqdcM6yNV4GiJ2");
-        const docSnap = await getDoc(docRef);
-
-        if (!docSnap.exists()) {
-          mensagemDiv.innerText = "Documento com marcas/modelos não encontrado.";
-          return;
+        const configDocRef = doc(db, "users", "rACXL88QnDVSQckqdcM6yNV4GiJ2");
+        const configSnap = await getDoc(configDocRef);
+        if (!configSnap.exists()) {
+          throw new Error("Documento de configuração não encontrado");
         }
-
-        const data = docSnap.data();
-
-        if (!data.marcas || typeof data.marcas !== "object") {
-          mensagemDiv.innerText = "Nenhuma marca/modelo cadastrada.";
-          return;
+        const data = configSnap.data();
+        if (typeof data.marcas !== "object") {
+          throw new Error("Campo 'marcas' inválido ou ausente");
         }
-
-        mensagemDiv.innerText = "";
         marcasModelos = data.marcas;
-
         marcaSelect.innerHTML = '<option value="">-- Selecione a marca --</option>';
         modeloSelect.innerHTML = '<option value="">-- Selecione o modelo --</option>';
         modeloSelect.disabled = true;
         btnCalcular.style.display = "none";
         btnCalcular.disabled = true;
 
-        for (const marca of Object.keys(marcasModelos)) {
+        for (const marca in marcasModelos) {
           const option = document.createElement("option");
           option.value = marca;
           option.textContent = marca;
           marcaSelect.appendChild(option);
         }
-
         marcaSelect.disabled = false;
+
       } catch (error) {
-        mensagemDiv.innerText = "Erro ao carregar marcas: " + error.message;
+        mensagemDiv.textContent = "Erro ao carregar marcas/modelos: " + error.message;
       }
     }
 
     marcaSelect.addEventListener("change", () => {
-      const marcaSelecionada = marcaSelect.value;
       modeloSelect.innerHTML = '<option value="">-- Selecione o modelo --</option>';
       resultadoDiv.textContent = "";
       erroDiv.textContent = "";
       btnCalcular.style.display = "none";
       btnCalcular.disabled = true;
 
-      if (!marcaSelecionada) {
+      const marca = marcaSelect.value;
+      if (!marca || !marcasModelos[marca]) {
         modeloSelect.disabled = true;
         return;
       }
 
-      const modelosObj = marcasModelos[marcaSelecionada] || {};
+      const modelosObj = marcasModelos[marca];
       modeloSelect.disabled = false;
-
       for (const modelo in modelosObj) {
         const option = document.createElement("option");
         option.value = modelo;
         option.textContent = modelo;
-        option.setAttribute("data-formula", modelosObj[modelo]);
+        option.dataset.formula = modelosObj[modelo];
         modeloSelect.appendChild(option);
       }
     });
@@ -337,36 +271,26 @@
     modeloSelect.addEventListener("change", () => {
       resultadoDiv.textContent = "";
       erroDiv.textContent = "";
-      if (modeloSelect.value && saldoAtual >= 50) {
-        btnCalcular.style.display = "block";
-        btnCalcular.disabled = false;
-      } else {
-        btnCalcular.style.display = "none";
-        btnCalcular.disabled = true;
-      }
+      atualizarUI();
     });
 
-    btnCalcular.addEventListener("click", calcular);
-
-    btnDepositar.addEventListener("click", () => {
-      window.location.href = "deposito.html";
-    });
-
-    // Atualiza a interface com o saldo atual
     function atualizarUI() {
-      if (typeof saldoAtual === 'number' && !isNaN(saldoAtual)) {
-        saldoDiv.textContent = `Saldo atual: ${saldoAtual.toFixed(2)} MZN`;
-      } else {
-        saldoDiv.textContent = `Saldo inválido`;
+      saldoDiv.textContent = `Saldo atual: ${saldoAtual.toFixed(2)} MZN`;
+
+      if (typeof valorCalculo !== "number") {
+        mensagemDiv.textContent = "Preço do cálculo ainda não carregado.";
+        btnCalcular.style.display = "none";
+        return;
       }
 
-      if (saldoAtual < 50) {
+      if (saldoAtual < valorCalculo) {
         btnCalcular.style.display = "none";
         btnCalcular.disabled = true;
         btnDepositar.style.display = "block";
-        mensagemDiv.textContent = "Saldo insuficiente para calcular. Por favor, deposite no mínimo 50.00 MZN. Cada código custa 50.00 MZN";
+        mensagemDiv.textContent = `Saldo insuficiente. Cada código custa ${valorCalculo.toFixed(2)} MZN.`;
       } else {
         btnDepositar.style.display = "none";
+        mensagemDiv.textContent = "";
         if (modeloSelect.value) {
           btnCalcular.style.display = "block";
           btnCalcular.disabled = false;
@@ -374,49 +298,31 @@
           btnCalcular.style.display = "none";
           btnCalcular.disabled = true;
         }
-        mensagemDiv.textContent = "";
       }
     }
 
-    async function atualizarSaldoUsuario(novoSaldo) {
-      try {
-        const userDocRef = doc(db, "users", userId);
-        await updateDoc(userDocRef, { saldo: novoSaldo });
-        saldoAtual = novoSaldo;
-        atualizarUI();
-      } catch (error) {
-        erroDiv.textContent = "Erro ao atualizar saldo: " + error.message;
-      }
-    }
+    btnCalcular.addEventListener("click", async () => {
+      erroDiv.textContent = "";
+      resultadoDiv.textContent = "";
 
-    async function calcular() {
-      const numero = numeroInput.value.trim();
-      resultadoDiv.textContent = '';
-      erroDiv.textContent = '';
-
-      if (numero.length !== 15 || !/^\d{15}$/.test(numero)) {
-        erroDiv.textContent = 'Por favor, digite um número com exatamente 15 dígitos numéricos.';
+      const imei = numeroInput.value.trim();
+      if (imei.length !== 15 || !/^\d{15}$/.test(imei)) {
+        erroDiv.textContent = "Por favor, digite um IMEI com exatamente 15 dígitos numéricos.";
         return;
       }
 
-      const marca = marcaSelect.value;
-      const modelo = modeloSelect.value;
+      if (typeof valorCalculo !== "number") {
+        erroDiv.textContent = "O preço do cálculo ainda não foi carregado.";
+        return;
+      }
 
-      if (!marca) {
-        erroDiv.textContent = "Selecione uma marca.";
-        return;
-      }
-      if (!modelo) {
-        erroDiv.textContent = "Selecione um modelo.";
-        return;
-      }
-      if (saldoAtual < 50) {
+      if (saldoAtual < valorCalculo) {
         erroDiv.textContent = "Saldo insuficiente para calcular. Deposite para continuar.";
         return;
       }
 
-      let formula = marcasModelos[marca][modelo];
-      let formulaInt = parseInt(formula);
+      const optionSel = modeloSelect.selectedOptions[0];
+      const formulaInt = parseInt(optionSel.dataset.formula);
       if (isNaN(formulaInt)) {
         erroDiv.textContent = "Fórmula inválida para este modelo.";
         return;
@@ -430,27 +336,31 @@
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            numero: numero,
+            numero: imei,
             formula: formulaInt
           })
         });
 
         const data = await response.json();
-
         if (!response.ok) {
           throw new Error(data.detail || 'Erro ao se comunicar com o servidor.');
         }
 
         resultadoDiv.textContent = 'O teu código é: ' + data.resultado;
-        erroDiv.textContent = "";
 
-        const novoSaldo = saldoAtual - 50;
-        await atualizarSaldoUsuario(novoSaldo);
+        const novoSaldo = saldoAtual - valorCalculo;
+        await updateDoc(doc(db, "users", userId), { saldo: novoSaldo });
+        saldoAtual = novoSaldo;
+        atualizarUI();
 
       } catch (error) {
         erroDiv.textContent = 'Erro: ' + error.message;
       }
-    }
+    });
+
+    btnDepositar.addEventListener("click", () => {
+      window.location.href = "deposito.html";
+    });
   </script>
 </body>
 </html>
