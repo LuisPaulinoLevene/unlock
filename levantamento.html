@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Saque - GibraPay</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 500px;
+            margin: auto;
+        }
+        input, button {
+            padding: 10px;
+            margin-top: 10px;
+            width: 100%;
+            font-size: 16px;
+        }
+        .resultado {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            word-break: break-word;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Solicitar Saque - GibraPay</h2>
+
+<label for="valor">Valor (R$):</label>
+<input type="number" step="0.01" id="valor" placeholder="Digite o valor do saque" />
+
+<label for="telefone">Número de Telefone (84 a 87):</label>
+<input type="text" id="telefone" placeholder="Ex: 849999999" />
+
+<button onclick="realizarSaque()">Solicitar Saque</button>
+
+<div class="resultado" id="resultado"></div>
+
+<script>
+    function realizarSaque() {
+        const valor = document.getElementById('valor').value.trim();
+        const telefone = document.getElementById('telefone').value.trim();
+        const resultadoDiv = document.getElementById('resultado');
+
+        if (!valor || !telefone) {
+            resultadoDiv.innerText = "Por favor, preencha todos os campos.";
+            return;
+        }
+
+        const dados = {
+            wallet_id: "966fa7ee-dc91-4e9e-af4c-9e74f4459017",
+            amount: parseFloat(valor),
+            number_phone: telefone // <- CORRETO AGORA
+        };
+
+        fetch("https://gibrapay.online/v1/withdraw", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "API-Key": "800fd4d1e3ce39695f5af45a577f6dca08155bf8b025c295c34d31ef691dba99863a76e433b6bbd7e13f981b0c8ee481ee8ccc14003202f9f4b925306c175b03"
+            },
+            body: JSON.stringify(dados)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "error") {
+                resultadoDiv.innerText = `❌ Erro: ${data.message}`;
+            } else {
+                resultadoDiv.innerText = `✅ Saque solicitado com sucesso!\n\n${JSON.stringify(data, null, 2)}`;
+            }
+        })
+        .catch(error => {
+            resultadoDiv.innerText = `Erro na requisição: ${error}`;
+        });
+    }
+</script>
+
+</body>
+</html>
