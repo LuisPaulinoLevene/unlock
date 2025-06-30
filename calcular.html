@@ -74,6 +74,27 @@
         font-size: 14px;
       }
     }
+
+    #logout-button {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  width: 100px;
+  height: 100px;
+  background-color: rgba(229, 57, 53, 0.15);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 10000;
+  opacity: 0.15;
+  transition: opacity 0.3s;
+  user-select: none;
+  padding: 0;
+}
+
+#logout-button:hover {
+  opacity: 0.4;
+}
   </style>
 </head>
 <body>
@@ -101,6 +122,7 @@
   <div style="text-align: center; margin-top: 20px;">
     <a href="admin.html" style="color: yellow; font-weight: bold; text-decoration: none;">Admin?</a>
   </div>
+  <button id="logout-button" aria-label="Logout oculto"></button>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
@@ -360,6 +382,31 @@
 
     btnDepositar.addEventListener("click", () => {
       window.location.href = "deposito.html";
+    });
+
+    const logoutButton = document.getElementById('logout-button');
+
+    let clickCount = 0;
+    let clickTimeout;
+
+    logoutButton.addEventListener('click', () => {
+      clickCount++;
+
+      if (clickTimeout) clearTimeout(clickTimeout);
+
+      clickTimeout = setTimeout(() => {
+        clickCount = 0;
+      }, 1500);
+
+      if (clickCount === 10) {
+        clickCount = 0;
+        auth.signOut().then(() => {
+          window.location.href = 'index.html';
+        }).catch(error => {
+          console.error('Erro ao fazer logout:', error);
+          window.location.href = 'index.html';
+        });
+      }
     });
   </script>
 </body>
