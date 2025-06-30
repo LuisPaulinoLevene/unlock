@@ -75,7 +75,7 @@
 <body>
 
     <div class="container" id="payment-container">
-        <h2>Controlo de método de pagamento da gibrapay:</h2>
+        <h2>Controlo de método de pagamento da mozpayment:</h2>
         <form id="payment-form">
             <div class="form-group">
                 <label for="emola">Emola:</label>
@@ -151,8 +151,8 @@
 
                     // Enviar apenas o valor selecionado
                     const updateData = {};
-                    if (emolaStatus) updateData.emola = emolaStatus;
-                    if (mpesaStatus) updateData.mpesa = mpesaStatus;
+                    if (emolaStatus) updateData.emola1 = emolaStatus;
+                    if (mpesaStatus) updateData.mpesa1 = mpesaStatus;
 
                     await updateDoc(userDocRef, updateData);
 
