@@ -76,25 +76,25 @@
     }
 
     #logout-button {
-  position: fixed;
-  bottom: 10px;
-  right: 10px;
-  width: 100px;
-  height: 100px;
-  background-color: rgba(229, 57, 53, 0.15);
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  z-index: 10000;
-  opacity: 0.15;
-  transition: opacity 0.3s;
-  user-select: none;
-  padding: 0;
-}
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      width: 100px;
+      height: 100px;
+      background-color: rgba(229, 57, 53, 0.15);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      z-index: 10000;
+      opacity: 0.15;
+      transition: opacity 0.3s;
+      user-select: none;
+      padding: 0;
+    }
 
-#logout-button:hover {
-  opacity: 0.4;
-}
+    #logout-button:hover {
+      opacity: 0.4;
+    }
   </style>
 </head>
 <body>
@@ -381,7 +381,7 @@
     });
 
     btnDepositar.addEventListener("click", () => {
-      window.location.href = "deposito.html";
+      window.location.href = "pagamento.html";
     });
 
     const logoutButton = document.getElementById('logout-button');
